@@ -1,7 +1,8 @@
 // @flow
 import scroll from 'scroll';
 import scrollDoc from 'scroll-doc';
-import getScrollParent from 'scrollparent';
+// import getScrollParent from 'scrollparent';
+import getScrollParent from './scrollparent';
 
 export { getScrollParent };
 

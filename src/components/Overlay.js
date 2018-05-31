@@ -17,6 +17,9 @@ import LIFECYCLE from '../constants/lifecycle';
 
 import Spotlight from './Spotlight';
 
+let unregisterOptimizedResize;
+let unregisterOptimizedScroll;
+
 (() => {
   const throttle = (type, name, obj = window) => {
     let running = false;
@@ -31,10 +34,14 @@ import Spotlight from './Spotlight';
       });
     };
     obj.addEventListener(type, func);
+    return () => {
+      obj.removeEventListener(type, func);
+    };
   };
 
   // IE 11: you'll need the CustomEvent polyfill
-  throttle('resize', 'optimizedResize');
+  unregisterOptimizedResize = throttle('resize', 'optimizedResize');
+  unregisterOptimizedScroll = throttle('scroll', 'optimizedScroll');
 })();
 
 export default class Overlay extends React.Component {
@@ -69,6 +76,7 @@ export default class Overlay extends React.Component {
     }
 
     window.addEventListener('optimizedResize', this.handleResize);
+    window.addEventListener('optimizedScroll', this.handleScroll);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -109,6 +117,10 @@ export default class Overlay extends React.Component {
     }
 
     window.removeEventListener('optimizedResize', this.handleResize);
+    window.removeEventListener('optimizedScroll', this.handleScroll);
+
+    unregisterOptimizedResize();
+    unregisterOptimizedScroll();
   }
 
   handleMouseMove = e => {
@@ -140,6 +152,10 @@ export default class Overlay extends React.Component {
   };
 
   handleResize = () => {
+    this.forceUpdate();
+  };
+
+  handleScroll = () => {
     this.forceUpdate();
   };
 
