@@ -777,6 +777,10 @@ function getStyles(stepStyles) {
     width = 490;
   }
 
+  if (options.floaterWidth) {
+    width = options.floaterWidth;
+  }
+
   var overlay = {
     bottom: 0,
     left: 0,
