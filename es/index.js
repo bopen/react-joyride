@@ -1528,7 +1528,7 @@ var JoyrideTooltipContainer = function JoyrideTooltipContainer(_ref) {
     }
   }
 
-  if (showSkipButton && !isLastStep) {
+  if (showSkipButton) {
     output.skip = React.createElement(
       'button',
       _extends({ style: styles.buttonSkip }, skipProps),
