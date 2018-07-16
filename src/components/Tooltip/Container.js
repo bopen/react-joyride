@@ -34,7 +34,7 @@ const JoyrideTooltipContainer = ({
     }
   }
 
-  if (showSkipButton && !isLastStep) {
+  if (showSkipButton) {
     output.skip = (
       <button
         style={styles.buttonSkip}
