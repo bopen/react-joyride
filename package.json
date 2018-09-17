@@ -42,7 +42,6 @@
     "react-proptype-conditional-require": "^1.0.4",
     "scroll": "^2.0.3",
     "scroll-doc": "^0.2.1",
-    "scrollparent": "^2.0.1",
     "tree-changes": "^0.3.2"
   },
   "devDependencies": {

@@ -3,7 +3,6 @@ import ExecutionEnvironment from 'exenv';
 import is from 'is-lite';
 import scroll from 'scroll';
 import scrollDoc from 'scroll-doc';
-import getScrollParent from 'scrollparent';
 import deepmerge from 'deepmerge';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -598,6 +597,24 @@ function createStore(props) {
   return new Store(props);
 }
 
+/* eslint-disable func-names, no-unused-vars */
+
+var scrollParent = function scrollParent(node) {
+  if (!(node instanceof HTMLElement || node instanceof SVGElement)) {
+    return null;
+  }
+
+  // const ps = parents(node.parentNode, []);
+  //
+  // for (let i = 0; i < ps.length; i += 1) {
+  //   if (scroll(ps[i])) {
+  //     return ps[i];
+  //   }
+  // }
+
+  return document.scrollingElement || document.documentElement;
+};
+
 /**
  * Find the bounding client rect
  *
@@ -642,7 +659,7 @@ function hasCustomScrollParent(element) {
   if (!element) {
     return false;
   }
-  return getScrollParent(element) !== scrollDoc();
+  return scrollParent(element) !== scrollDoc();
 }
 
 function hasCustomOffsetParent(element) {
@@ -681,7 +698,7 @@ function getScrollTo(element, offset) {
     return 0;
   }
 
-  var parent = getScrollParent(element);
+  var parent = scrollParent(element);
   var top = element.offsetTop;
 
   if (hasCustomScrollParent(element) && !hasCustomOffsetParent(element)) {
@@ -718,10 +735,10 @@ function getElement(element) {
  */
 function getElementPosition(element, offset) {
   var elementRect = getClientRect(element);
-  var scrollParent = getScrollParent(element);
+  var scrollParent$$1 = scrollParent(element);
   var hasScrollParent = hasCustomScrollParent(element);
 
-  var top = elementRect.top + (!hasScrollParent && !isFixed(element) ? scrollParent.scrollTop : 0);
+  var top = elementRect.top + (!hasScrollParent && !isFixed(element) ? scrollParent$$1.scrollTop : 0);
 
   return Math.floor(top - offset);
 }
@@ -1017,7 +1034,7 @@ function getMergedStep(step, props) {
 
   var mergedStep = deepmerge.all([getTourProps(props), DEFAULTS.step, step]);
   var mergedStyles = getStyles(deepmerge(props.styles || {}, step.styles || {}));
-  var scrollParent = hasCustomScrollParent(getElement(step.target));
+  var scrollParent$$1 = hasCustomScrollParent(getElement(step.target));
   var floaterProps = deepmerge.all([props.floaterProps || {}, DEFAULTS.floaterProps, mergedStep.floaterProps || {}]);
 
   // Set react-floater props
@@ -1038,7 +1055,7 @@ function getMergedStep(step, props) {
     floaterProps.wrapperOptions.placement = step.placementBeacon;
   }
 
-  if (scrollParent) {
+  if (scrollParent$$1) {
     floaterProps.options.preventOverflow.boundariesElement = 'window';
   }
 
@@ -1314,7 +1331,7 @@ var Overlay = function (_React$Component) {
 
       if (!disableScrolling) {
         var element = getElement(target);
-        this.scrollParent = hasCustomScrollParent(element) ? getScrollParent(element) : document;
+        this.scrollParent = hasCustomScrollParent(element) ? scrollParent(element) : document;
       }
 
       window.addEventListener('resize', this.handleResize);
@@ -2399,7 +2416,7 @@ var Joyride = function (_React$Component) {
 
         if (status === STATUS.RUNNING && shouldScroll) {
           var hasCustomScroll = hasCustomScrollParent(target);
-          var scrollParent = getScrollParent(target);
+          var scrollParent$$1 = scrollParent(target);
           var scrollY = Math.floor(getScrollTo(target, scrollOffset));
 
           log({
@@ -2432,7 +2449,7 @@ var Joyride = function (_React$Component) {
           }
 
           if (status === STATUS.RUNNING && shouldScroll && scrollY >= 0) {
-            scrollTo(scrollY, scrollParent);
+            scrollTo(scrollY, scrollParent$$1);
           }
         }
       }
